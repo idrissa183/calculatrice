@@ -1,7 +1,9 @@
 pipeline{
     agent none
     stages{
-      agent {
+      
+      stage("Installation des dépendances"){
+        agent {
         docker {
             image "python:3.10-alpine"
             args "-v /c/ProgramData/Jenkins/.jenkins/workspace/calculatrice:/src -w /src"
@@ -9,16 +11,23 @@ pipeline{
             
         }
       }
-      stage("Installation des dépendances"){
-          steps{
-              sh "pip install -r requirements.txt"
-          }
+      steps{
+          sh "pip install -r requirements.txt"
+      }
       }
         
       stage("Execution des tests"){
-          steps{
-              sh "python -m pytest test.py -v"
-          }
+        agent {
+        docker {
+            image "python:3.10-alpine"
+            args "-v /c/ProgramData/Jenkins/.jenkins/workspace/calculatrice:/src -w /src"
+            reuseNode true
+            
+        }
+      }
+      steps{
+          sh "python -m pytest test.py -v"
+      }
       }
     }
 }
