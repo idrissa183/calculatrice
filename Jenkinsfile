@@ -7,5 +7,11 @@ pipeline{
       }
     }
 
+    stage("Version de python"){
+      steps{
+        bat "python --version"
+      }
+    }
+
   }
 }
